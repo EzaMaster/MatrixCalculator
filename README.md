@@ -27,7 +27,7 @@ Perform basic matrix operations like addition, subtraction, and multiplication.
 
 ## Live Demo
 
-Check out the live demo of the Matrix Calculator on our [Live Server](your_live_server_link_here).
+Check out the live demo of the Matrix Calculator on our [Live Server](https://marincervinschi.github.io/MatrixCalculator/).
 
 ## Contributing
 
