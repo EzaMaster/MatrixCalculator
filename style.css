@@ -1,0 +1,693 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+    color: #0f193c;
+    font-family: "Poppins", sans-serif;
+}
+/* --------body---------- */
+body {
+    background: url(images/background.jpg) no-repeat center center / cover ;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: auto;
+    max-width: 1300px;
+    
+}
+
+body button {
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+body p {
+    color: aliceblue;
+    font-size: 20px;
+}
+
+
+h1 {
+    position: absolute;
+    top: 15px;
+    padding: 0;
+    font-size: 4rem;
+    font-weight: 800;
+    
+    color: transparent;
+    -webkit-text-stroke: 2px #0f193c;
+    background-image: linear-gradient(#0f193c,#0f193c);
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-position: -37rem 0;
+    
+    animation: homeBgText 10s linear infinite;
+    animation-delay: 2s;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        border-right: 2px solid #0f193c;
+        z-index: -1;
+        
+        animation: homeCursorText 10s linear infinite;
+        animation-delay: 2s;
+    }
+}
+/* --------matrix conteiner div---------- */
+.matrix_01 {
+    padding: 3rem 5rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 32px;
+
+}
+
+.slide-in-elliptic-top-fwd {
+	-webkit-animation: slide-in-elliptic-top-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-elliptic-top-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+.slide-in-elliptic-left-fwd {
+	-webkit-animation: slide-in-elliptic-left-fwd 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-elliptic-left-fwd 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+ @-webkit-keyframes slide-in-elliptic-top-fwd {
+    0% {
+      -webkit-transform: translateY(-600px) rotateX(-30deg) scale(0);
+              transform: translateY(-600px) rotateX(-30deg) scale(0);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) rotateX(0) scale(1);
+              transform: translateY(0) rotateX(0) scale(1);
+      -webkit-transform-origin: 50% 1400px;
+              transform-origin: 50% 1400px;
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in-elliptic-top-fwd {
+    0% {
+      -webkit-transform: translateY(-600px) rotateX(-30deg) scale(0);
+              transform: translateY(-600px) rotateX(-30deg) scale(0);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) rotateX(0) scale(1);
+              transform: translateY(0) rotateX(0) scale(1);
+      -webkit-transform-origin: 50% 1400px;
+              transform-origin: 50% 1400px;
+      opacity: 1;
+    }
+  }
+@-webkit-keyframes slide-in-elliptic-left-fwd {
+    0% {
+      -webkit-transform: translateX(-800px) rotateY(30deg) scale(0);
+              transform: translateX(-800px) rotateY(30deg) scale(0);
+      -webkit-transform-origin: -100% 50%;
+              transform-origin: -100% 50%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateX(0) rotateY(0) scale(1);
+              transform: translateX(0) rotateY(0) scale(1);
+      -webkit-transform-origin: 1800px 50%;
+              transform-origin: 1800px 50%;
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in-elliptic-left-fwd {
+    0% {
+      -webkit-transform: translateX(-800px) rotateY(30deg) scale(0);
+              transform: translateX(-800px) rotateY(30deg) scale(0);
+      -webkit-transform-origin: -100% 50%;
+              transform-origin: -100% 50%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateX(0) rotateY(0) scale(1);
+              transform: translateX(0) rotateY(0) scale(1);
+      -webkit-transform-origin: 1800px 50%;
+              transform-origin: 1800px 50%;
+      opacity: 1;
+    }
+  }
+  
+
+/* --------functions---------- */
+.functions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+    width: 70%;
+
+    gap: .6rem;
+
+    >button {
+        font-size: 15px;
+        font-weight: 500;
+        padding: .3rem;
+        border-radius: 10px;
+        color: #0f193c;
+
+        &:hover {
+            background-color: #cbd8d8;
+            transform: scale(1.1);
+        }
+
+        &:active {
+            background: #0f193c;
+            color: aliceblue;
+        }
+    }
+
+}
+
+
+/* --------matrix div---------- */
+.matrix {
+    padding: 1.5rem;
+    position: relative;
+    display: grid;
+    justify-content: center;
+    align-items: center; 
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 1rem;
+
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 32px;
+}
+
+.slide-in-elliptic-bottom-fwd {
+	-webkit-animation: slide-in-elliptic-bottom-fwd 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-elliptic-bottom-fwd 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+/* ----------------------------------------------
+ * Generated by Animista on 2023-10-26 0:22:0
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation slide-in-elliptic-bottom-fwd
+ * ----------------------------------------
+ */
+ @-webkit-keyframes slide-in-elliptic-bottom-fwd {
+    0% {
+      -webkit-transform: translateY(600px) rotateX(30deg) scale(0);
+              transform: translateY(600px) rotateX(30deg) scale(0);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) rotateX(0) scale(1);
+              transform: translateY(0) rotateX(0) scale(1);
+      -webkit-transform-origin: 50% -1400px;
+              transform-origin: 50% -1400px;
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in-elliptic-bottom-fwd {
+    0% {
+      -webkit-transform: translateY(600px) rotateX(30deg) scale(0);
+              transform: translateY(600px) rotateX(30deg) scale(0);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) rotateX(0) scale(1);
+              transform: translateY(0) rotateX(0) scale(1);
+      -webkit-transform-origin: 50% -1400px;
+              transform-origin: 50% -1400px;
+      opacity: 1;
+    }
+  }
+  
+
+input {
+    font-family: 'Lato', sans-serif;
+    width: 75px;
+    height: 75px;
+    font-size: 28px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+/* Hide the increase and decrease arrows in the 'number' input" */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --------adding and subtracting rows and columns---------- */
+.add_row {
+    position: relative;
+    left: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+
+    >button{
+        width: 25px;
+        height: 25px;
+        font-size: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        padding: 4px;
+        text-align: center;
+
+        &:hover{
+            background-color: #cbd8d8;
+            transform: scale(1.1);
+        }
+        &:active {
+            background: green;
+        }
+        
+    }
+
+    >i {
+        color: aliceblue;
+        font-size: 22px;
+        cursor: pointer;
+        filter: drop-shadow(0 0 20px #333);
+
+        &:hover{
+            transform: scale(1.1);
+        }
+
+        &:active {
+            color: orange;
+        }
+    }
+    #add_row:active {
+        background: #00cc00;
+        color: aliceblue;
+    }
+    #subtract_row:active {
+        background: red;
+        color: aliceblue;
+    }
+    
+}
+
+.add_collumn {
+    position: absolute;
+    right: 40px;
+    bottom: 28%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: .5rem;
+
+    >button{
+        width: 25px;
+        height: 25px;
+        font-size: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        padding: 4px;
+        text-align: center;
+
+        &:hover{
+            background-color: #cbd8d8;
+            transform: scale(1.1);
+        }
+    }
+    #add_col:active {
+        background: #00cc00;
+        color: aliceblue;
+    }
+    #subtract_col:active {
+        background: red;
+        color: aliceblue;
+    }
+}
+
+
+/* --------operations div---------- */
+.operations {
+    position: relative;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: .4rem;
+    padding: 1.5rem;
+
+    >button {
+        font-size: 18px;
+        font-weight: 500;
+        position: relative;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: .1rem 1rem;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        color: #0f193c;
+        
+
+        &:hover{
+            background-color: #cbd8d8;
+            transform: scale(1.1);
+        }
+
+        &:active {
+            background: #0f193c;
+            color: aliceblue;
+        }
+    }
+
+}
+
+/* --------PopUp---------- */
+.popup {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: 0.5s;
+
+}
+
+.popup-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    padding: 2rem 3rem;
+    gap: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 32px;
+    transition: 0.3s;
+
+    >p {
+        font-weight: 500;
+    }
+}
+
+#popupOkButton {
+    position: relative;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    &:hover {
+        background-color: aliceblue;
+        transform: scale(1.1);
+    }
+
+    &:active {
+        background: #0f193c;
+        color: aliceblue;
+    }
+}
+
+
+/* modal */
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1, 1);
+    background: rgba(0, 0, 0, 0.5);
+    transition: 0.5s;
+    z-index: 100;
+}
+
+body.open .modal-background {
+    visibility: visible;
+    opacity: 1;
+    animation: background-in 1s both;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    padding: 3.3rem 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    background: #0a0d29;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+
+    translate: -50% -50%;
+    opacity: 0;
+    gap: 2rem;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 100;
+    
+    #title {
+        font-size: 30px;
+        font-weight: bold;
+        color: aliceblue;
+    }
+
+    .modal-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        font-family: 'Lato', sans-serif;
+
+        >mo {
+            font-size: 35px;
+            color: aliceblue;
+        }
+        .output_number {
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            font-size: 35px;
+            font-weight: 700;
+            color: aliceblue;
+            padding: 0 20px;
+            border: aliceblue solid 3px;
+            border-radius: 18px;
+            border-top: transparent;
+            border-bottom: transparent;
+        }
+
+        >span {
+            font-size: 35px;
+            font-weight: 600;
+            color: #00cc00;
+        }
+        .res {
+            color: #00cc00;
+            border: #00cc00 solid 2px;
+            border-bottom: transparent;
+            border-top: transparent;
+        }
+    }
+}
+
+body.open .modal {
+  opacity: 1;
+  visibility: visible;
+  animation: modal-in 1s;
+}
+
+body.closed .modal {
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% -50%;
+}
+@keyframes background-in {
+  0% {
+    scale: 0 0.005;
+  }
+  33% {
+    scale: 1 0.005;
+  }
+  66%,
+  100% {
+    scale: 1 1;
+  }
+}
+@keyframes modal-in {
+    0%,
+    66% {
+    opacity: 0;
+    visibility: hidden;
+    translate: -50% -30%;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+/* //////////// */
+
+
+.insert {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: .5rem;
+
+    >button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        font-size: 15px;
+        font-weight: 500;
+        padding: .2rem .3rem;
+        border-radius: 10px;
+
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+
+        &:hover{
+            background-color: aliceblue;
+            transform: scale(1.1);
+        }
+
+        &:active {
+            background: yellow;
+        }
+    }
+
+}
+
+/* --------footer---------- */
+footer{
+    position: absolute;
+    bottom: 5px;
+    >p {
+        font-size: 15px;
+        margin: 5px;
+        padding: 5px;
+        
+        >i{
+            color: aliceblue;
+            >a {
+                color: aliceblue;
+            }
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+}
+
+
+/* keyfrane animation --------------------------------------------------------- */
+
+@keyframes homeBgText {
+    0%,
+    10%,
+    100% {
+        background-position: -37rem 0;
+    }
+
+    65%,
+    85% {
+        background-position: 0 0;
+    }
+}
+
+@keyframes homeCursorText {
+    0%,
+    10%,
+    100% {
+        width: 0;
+    }
+
+    65%,
+    78%,
+    85% {
+        width: 100%;
+        opacity: 1;
+    }
+
+    75%,
+    81% {
+        opacity: 0;
+    }
+}

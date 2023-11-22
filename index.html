@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/icon16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="images/icon32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/icon96.png" sizes="96x96">    
+    <title>Matrix Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <h1 class="tracking-in-contract-bck-top">Matrix Calculator</h1>
+    <div class="matrix_01 slide-in-elliptic-top-fwd">
+        <div class="functions ">
+            <button id="determinant" onclick="determinat()">Determinant</button>
+            <button id="rank" onclick="rank()">Rank</button>
+            <button id="eigenvalues" onclick="eigenvalues()">Eigenvalues</button>
+            <button id="inverse" onclick="inverse()">Inverse</button>
+            <button id="operations" onclick="operations()">Operations</button>
+        </div>
+        <div class="matrix slide-in-elliptic-bottom-fwd" id="matrix_A">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+            <input type="number">
+        </div>
+        <div class="add_row">
+            <button id="add_row" onclick="addRow(matrix, matrix_Div, matrix_inputs)">+</button>
+            <button id="subtract_row" onclick="subRow(matrix, matrix_Div, matrix_inputs)">-</button>
+            <i class='bx bx-trash' onclick="clean(matrix)"></i>
+        </div>
+        <div class="add_collumn">
+            <button id="add_col" onclick="addCol(matrix, matrix_Div, matrix_inputs)">+</button>
+            <button id="subtract_col" onclick="subCol(matrix, matrix_Div, matrix_inputs)">-</button>
+        </div>
+    </div>
+    <div class="modal-background" onclick="toggleModal()"></div>
+    <div class="modal">
+        <h2 id="title"></h2>
+    </div>
+    <footer>
+        <p>© Copyright Marin Cervinschi || <i class='bx bxl-github' ><a href="https://github.com/MarinCervinschi/WebDeveloper/tree/main/Matrix%20Calculator">GitHub Repo</a></i> - All rights reserved</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js" charset="utf-8"></script>
+    <script src="js/det.js" charset="UTF-8"></script>
+    <script src="js/rank.js" charset="UTF-8"></script>
+    <script src="js/operators.js" charset="UTF-8"></script>
+    <script src="js/inverse.js" charset="UTF-8"></script>
+    <script src="js/script.js" charset="UTF-8"></script>
+
+</body>
+
+</html>
