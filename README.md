@@ -29,13 +29,10 @@ Perform basic matrix operations like addition, subtraction, and multiplication.
 
 Check out the live demo of the Matrix Calculator on our [Live Server](https://marincervinschi.github.io/MatrixCalculator/).
 
-## Contributing
 
-Contributions are welcome! If you have ideas for improvements, new features, or bug fixes, please open an issue or submit a pull request.
+## Contributing And Report Issues
 
-## Report Issues
-
-If you encounter any problems or have suggestions for improvement, please don't hesitate to [create an issue](https://github.com/MarinCervinschi/MatrixCalculator/issues). Your feedback is valuable!
+Contributions are welcome! If you have ideas for improvements, new features, or bug fixes, please don't hesitate to [create an issue](https://github.com/MarinCervinschi/MatrixCalculator/issues). Your feedback is valuable!
 
 ## License
 
