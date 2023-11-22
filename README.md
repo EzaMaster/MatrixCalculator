@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to the Matrix Calculator project! This tool is designed to perform a variety of matrix operations, making it a versatile solution for linear algebra computations. Whether you need to some work with matrices, this calculator has you covered. 
+Welcome to the Matrix Calculator project! This tool is designed to perform a variety of matrix operations, making it a versatile solution for linear algebra computations. Whether you need to work with matrices, this calculator has you covered. 
 
 ## About the Developer
 
