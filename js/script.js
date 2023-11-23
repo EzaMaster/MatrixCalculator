@@ -51,7 +51,8 @@ const toggleModal = () => {
       bodyClassList.remove("closed");
       bodyClassList.add("open");
     }
-  };
+};
+
 
 // Check if all matrix data cells are filled
 function check_data(m){
@@ -299,6 +300,12 @@ function operations() {
         function_Div.style.display = "none";
         opt_button = true;
 
+
+
+        if (matrix_conteiner_Div.classList.contains("slide-in-elliptic-right-fwd")) {
+            matrix_conteiner_Div.classList.remove("slide-in-elliptic-right-fwd");
+        }
+
         // operators div
         const operations_Div = createStuff("div", body, "operations", null, null);
         // Back button    
@@ -382,6 +389,8 @@ function back(m,n) {
     body.removeChild(n);
     function_Div.style.display = "flex";
     opt_button = false;
+
+    matrix_conteiner_Div.classList.add("slide-in-elliptic-right-fwd");
 }
 function add_matrix() {
     if((matrix_B.rows === matrix.rows) && (matrix_B.cols === matrix.cols)){
