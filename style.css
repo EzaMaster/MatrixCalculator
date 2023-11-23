@@ -17,7 +17,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    flex-direction: row;
+    min-height: 100vh;
     margin: auto;
     max-width: 1300px;
     
@@ -169,7 +170,7 @@ h1 {
     align-items: center;
     position: relative;
     flex-wrap: wrap;
-    width: 70%;
+    width: 80%;
 
     gap: .6rem;
 
@@ -637,6 +638,7 @@ body.closed .modal {
 /* --------footer---------- */
 footer{
     position: absolute;
+    text-align: center;
     bottom: 5px;
     >p {
         font-size: 15px;
@@ -689,5 +691,94 @@ footer{
     75%,
     81% {
         opacity: 0;
+    }
+}
+
+
+/* media query ------------------------------------------------------------------------*/
+
+@media (max-width:768px) {
+
+}
+
+@media (max-width:520px), (max-height: 400px) {
+    html {
+        font-size: small;
+    }
+    body {
+        flex-direction: column;
+        padding: 10rem 0 8rem 0;
+        >h1 {
+            font-size: 3rem;
+            background-position: -30rem 0;
+        } 
+    }
+
+    .functions {
+        width: 70%;
+
+        >button {
+            font-size: 12px;
+        }
+    } 
+    .matrix_01 {
+        padding: 0;
+        background: none;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        border: none;
+        border-radius: none;
+    }
+
+    .add_collumn, .add_row {
+        >button {
+            display: none;
+        }
+    }
+
+    .add_row {
+        left: 30%;
+    }
+    .operations {
+        padding-top: 0;
+        >button {
+            font-size: 14px;
+        }
+    }
+    .modal {
+        padding: 3rem 3.5rem;
+        #title {
+            font-size: 25px;
+        }
+
+
+        .modal-content {
+            flex-direction: column;
+            >mo, pre {
+                font-size: 27px;
+            }
+            .output_number {
+                font-size: 27px;
+            }
+        }
+    }
+
+    input {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    @keyframes homeBgText {
+        0%,
+        10%,
+        100% {
+            background-position: -27.5rem 0;
+        }
+    
+        65%,
+        85% {
+            background-position: 0 0;
+        }
     }
 }
