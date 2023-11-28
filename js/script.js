@@ -236,12 +236,36 @@ function rank(){
         createPopup("Complete the matrix!");
     }
 }
-// Button function for Eigenvalues calculations
+// Button function for Eigenvalues & Eigenvectors calculations
 function eigenvalues() {
     if(matrix.rows === matrix.cols){
         if(check_data(matrix)){
-            // code
-            createPopup("Work in progress...");
+            toggleModal();
+
+            const modalContent = createStuff("div", modal, "modal-content", null, null);
+            // title
+            title.textContent = "Eigenvalues & Eigenvectors";
+            // matrix A
+            const out_matrix_A = createStuff("pre", modalContent, null, null, null);
+            createMatrix(matrix, out_matrix_A);
+            // =
+            createStuff("mo", modalContent, null, null, ":");
+
+            const eigenvalues = calc_eigenvalues(matrix);
+            for (let i = 0; i < matrix.rows; i++) {
+                createStuff("span", modalContent, null, null, eigenvalues[i]);
+                createStuff("mo", modalContent, null, null, "=");
+                const eigsvector = createStuff("pre", modalContent, null, null, null);
+                const mat = {
+                    rows: matrix.rows,
+                    cols: matrix.cols,
+                    data: calc_eigenvectors(matrix, eigenvalues[i])
+                }
+                createMatrix(mat, eigsvector);
+            
+            }
+            // Rank result
+            createStuff("span", modalContent, null, null, calc_rank(matrix));
         }else{
             // Complete the matrix
             createPopup("Complete the matrix!");
