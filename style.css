@@ -17,7 +17,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 2rem;
     min-height: 100vh;
     margin: auto;
     max-width: 1300px;
@@ -215,11 +216,13 @@ h1 {
 
 /* --------functions---------- */
 .functions {
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: 60%;
+    width: 300px;
+    z-index: 20;
 
     gap: .6rem;
 

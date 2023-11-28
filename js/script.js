@@ -253,9 +253,9 @@ function eigenvalues() {
 
 
             const eigenvalues = [...new Set(calc_eigenvalues(matrix).map(value => isNaN(value) ? 0 : value).map(num => num.toFixed(3)))];
-            console.log(eigenvalues);
+            const eig = eigenvalues.map(value => Math.abs(value));
             for (let i = 0; i < eigenvalues.length; i++) {
-                createStuff("span", modalContent, null, null, Math.abs(eigenvalues[i]));
+                createStuff("span", modalContent, null, null, eigenvalues[i] >= 0.00 ? eig[i] : -eig[i]);
                 createStuff("mo", modalContent, null, null, "➔");
                 const eigsvector = createStuff("pre", modalContent, "res", null, null);
                 const mat = {
@@ -326,6 +326,7 @@ function clean(m) {
 function operations() {
     if(!opt_button){
         function_Div.style.display = "none";
+        document.body.style.flexDirection = "row";
         opt_button = true;
 
 
@@ -416,6 +417,7 @@ function back(m,n) {
     body.removeChild(m);
     body.removeChild(n);
     function_Div.style.display = "flex";
+    document.body.style.flexDirection = "column";
     opt_button = false;
 
     matrix_conteiner_Div.classList.add("slide-in-elliptic-right-fwd");
