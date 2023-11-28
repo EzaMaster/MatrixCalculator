@@ -252,11 +252,12 @@ function eigenvalues() {
             createStuff("mo", modalContent, null, null, ":");
 
 
-            const eigenvalues = calc_eigenvalues(matrix).map(num => Math.round(num)).map(value => isNaN(value) ? 0 : value);;
-            for (let i = 0; i < matrix.cols; i++) {
-                createStuff("span", modalContent, null, null, eigenvalues[i]);
-                createStuff("mo", modalContent, null, null, "=");
-                const eigsvector = createStuff("pre", modalContent, null, null, null);
+            const eigenvalues = [...new Set(calc_eigenvalues(matrix).map(value => isNaN(value) ? 0 : value).map(num => num.toFixed(3)))];
+            console.log(eigenvalues);
+            for (let i = 0; i < eigenvalues.length; i++) {
+                createStuff("span", modalContent, null, null, Math.abs(eigenvalues[i]));
+                createStuff("mo", modalContent, null, null, "➔");
+                const eigsvector = createStuff("pre", modalContent, "res", null, null);
                 const mat = {
                     rows: matrix.rows,
                     cols: 1,
@@ -265,6 +266,9 @@ function eigenvalues() {
                 mat.data = calc_eigenvectors(matrix, eigenvalues[i]).map(valore => valore.replace(/[()]/g, ''));
                 
                 createMatrix(mat, eigsvector);
+                if (i + 1 !== eigenvalues.length) {
+                    createStuff("mo", modalContent, null, null, ",");
+                }
             }
         }else{
             // Complete the matrix

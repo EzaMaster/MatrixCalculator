@@ -171,11 +171,13 @@ function solveEquation(matrix) {
 
 // Function to calculate eigenvalues of a matrix
 function calc_eigenvalues(m) {
+    m.data = m.data.map(n => Number(n));
     return math.eigs(math.matrix(createMatrixArray(m))).values.toArray();
 }
 
 // Function to calculate eigenvectors for a given matrix and eigenvalues
 function calc_eigenvectors(mat, eigenvalues) {
+    mat.data = mat.data.map(n => Number(n));
     let gaussianMatrix = GaussianElimination(createMatrixArray(removeLambda(mat, eigenvalues)));
     gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => isNaN(value) ? 0 : value));
     gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => !isFinite(value) ? 1 : value));
