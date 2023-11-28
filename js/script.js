@@ -251,21 +251,21 @@ function eigenvalues() {
             // =
             createStuff("mo", modalContent, null, null, ":");
 
-            const eigenvalues = calc_eigenvalues(matrix);
-            for (let i = 0; i < matrix.rows; i++) {
+
+            const eigenvalues = calc_eigenvalues(matrix).map(num => Math.round(num)).map(value => isNaN(value) ? 0 : value);;
+            for (let i = 0; i < matrix.cols; i++) {
                 createStuff("span", modalContent, null, null, eigenvalues[i]);
                 createStuff("mo", modalContent, null, null, "=");
                 const eigsvector = createStuff("pre", modalContent, null, null, null);
                 const mat = {
                     rows: matrix.rows,
-                    cols: matrix.cols,
-                    data: calc_eigenvectors(matrix, eigenvalues[i])
+                    cols: 1,
+                    data: []
                 }
+                mat.data = calc_eigenvectors(matrix, eigenvalues[i]).map(valore => valore.replace(/[()]/g, ''));
+                
                 createMatrix(mat, eigsvector);
-            
             }
-            // Rank result
-            createStuff("span", modalContent, null, null, calc_rank(matrix));
         }else{
             // Complete the matrix
             createPopup("Complete the matrix!");

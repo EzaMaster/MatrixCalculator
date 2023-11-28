@@ -1,6 +1,4 @@
 // Import necessary libraries
-const math = require('mathjs');
-const algebra = require('algebra.js');
 const Equation = algebra.Equation;
 
 // Function to convert matrix data into a 2D array
@@ -14,11 +12,6 @@ function createMatrixArray(matrix) {
         matrixArray.push(rowData);
     }
     return matrixArray;
-}
-
-// Function to calculate eigenvalues of a matrix
-function calc_eigenvalues(m) {
-    return math.eigs(math.matrix(createMatrixArray(m))).values.toArray();
 }
 
 // Function to subtract lambda from the diagonal of a matrix
@@ -176,17 +169,17 @@ function solveEquation(matrix) {
     return Object.values(solution).filter(value => !/[a-z]/i.test(value));
 }
 
+// Function to calculate eigenvalues of a matrix
+function calc_eigenvalues(m) {
+    return math.eigs(math.matrix(createMatrixArray(m))).values.toArray();
+}
+
 // Function to calculate eigenvectors for a given matrix and eigenvalues
 function calc_eigenvectors(mat, eigenvalues) {
-    let eigenvectors = [];
-    for (let i = 0; i < eigenvalues.length; i++) {
+    let gaussianMatrix = GaussianElimination(createMatrixArray(removeLambda(mat, eigenvalues)));
+    gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => isNaN(value) ? 0 : value));
+    gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => !isFinite(value) ? 1 : value));
+    gaussianMatrix = gaussianMatrix.map(cols => cols.map(rows => rows.toFixed(5)));
 
-        let gaussianMatrix = GaussianElimination(createMatrixArray(removeLambda(mat, eigenvalues[i])));
-        gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => isNaN(value) ? 0 : value));
-        gaussianMatrix = gaussianMatrix.map(cols => cols.map(value => !isFinite(value) ? 1 : value));
-        gaussianMatrix = gaussianMatrix.map(cols => cols.map(rows => rows.toFixed(5)));
-    
-        eigenvectors.push(solveEquation(gaussianMatrix));
-    }
-    return eigenvectors;
+    return (solveEquation(gaussianMatrix));
 }
