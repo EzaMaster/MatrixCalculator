@@ -129,7 +129,7 @@ function addRow(m, div, ipt) {
     }
 }
 function subRow(m, div, ipt) {
-    if(m.rows > 2){
+    if(m.rows > 1){
         --m.rows;
         // remove new inputs
         for(let i = 0; i < m.cols; ++i){
@@ -167,7 +167,7 @@ function addCol(m, div,ipt) {
     }
 }
 function subCol(m, div, ipt) {
-    if(m.cols > 2){
+    if(m.cols > 1){
         --m.cols;
         // remove new inputs
         for(let i = 0; i < m.rows; ++i){
