@@ -1,63 +1,1384 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="images/icon16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="images/icon32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="images/icon96.png" sizes="96x96">    
-    <title>Matrix Calculator</title>
-    <link rel="stylesheet" href="style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Kalkulator Matematika Lengkap</title>
+  <!--
+    Pembuat script: Cursor AI (GPT-5)
+    Tanggal pembuatan: 2025-08-09
+    Dependensi CDN: math.js 11.8.0
+
+    Dokumentasi singkat:
+    - Cara menjalankan: simpan file ini sebagai `index.html`, lalu buka langsung di browser modern (Chrome/Edge/Firefox). Tidak perlu instalasi tambahan.
+    - Mode kurs online (mata uang): buka tab Konverter → kategori Mata Uang → aktifkan "Gunakan kurs online". Default memakai `exchangerate.host` (tanpa API key). Opsional: masukkan API key untuk exchangerate-api.com jika tersedia.
+    - Batasan: 
+      * Eigenvalues/eigenvectors tidak ditampilkan.
+      * Perhitungan numerik (integrasi/derivatif) menggunakan metode dasar (trapezoid dan beda hingga) dan dapat memiliki galat aproksimasi.
+      * Untuk matriks, gunakan math.js untuk determinan, inverse, rank, dan operasi lainnya demi ketepatan numerik.
+  -->
+
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --bg-soft: #111721;
+      --text: #e6edf3;
+      --muted: #a9b4c0;
+      --primary: #4da3ff;
+      --accent: #6be675;
+      --danger: #ff6b6b;
+      --warn: #ffd166;
+      --card: #121826;
+      --border: #243246;
+      --input: #0f1520;
+      --shadow: 0 6px 22px rgba(0,0,0,0.35);
+    }
+    .light {
+      --bg: #f7f9fc;
+      --bg-soft: #ffffff;
+      --text: #0b1220;
+      --muted: #4b5563;
+      --primary: #2563eb;
+      --accent: #059669;
+      --danger: #dc2626;
+      --warn: #d97706;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --input: #f3f4f6;
+      --shadow: 0 6px 18px rgba(17,24,39,0.10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.4;
+    }
+    a { color: var(--primary); text-decoration: none; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg-soft);
+      z-index: 5;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+    .brand svg { width: 22px; height: 22px; }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 60px);
+    }
+    aside {
+      border-right: 1px solid var(--border);
+      background: var(--bg-soft);
+      padding: 14px;
+    }
+    .nav-item {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .nav-item svg { width: 20px; height: 20px; }
+    .nav-item:hover { background: var(--card); border-color: var(--border); }
+    .nav-item.active { background: var(--card); border-color: var(--primary); }
+
+    main { padding: 16px; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { order: 2; }
+      main { order: 1; }
+      .grid.two, .grid.three, .grid.four { grid-template-columns: 1fr; }
+    }
+
+    h2 { font-size: 1.1rem; margin: 0 0 8px 0; }
+    h3 { font-size: 1rem; margin: 0 0 8px 0; color: var(--muted); }
+    label { font-size: 0.92rem; color: var(--muted); display: block; margin-bottom: 6px; }
+
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      outline: none;
+    }
+    textarea { min-height: 74px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .btn.primary { background: var(--primary); color: white; border-color: transparent; }
+    .btn.accent { background: var(--accent); color: white; border-color: transparent; }
+    .btn.warn { background: var(--warn); color: black; border-color: transparent; }
+    .btn.danger { background: var(--danger); color: white; border-color: transparent; }
+    .btn.ghost { background: transparent; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.85rem; }
+
+    .result-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 280px;
+    }
+
+    table.matrix {
+      border-collapse: collapse;
+      width: 100%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+    }
+    table.matrix td, table.matrix th { border: 1px solid var(--border); padding: 4px; text-align: center; }
+    table.matrix input { width: 84px; text-align: right; }
+
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      bottom: 16px; right: 16px;
+      min-width: 180px;
+      max-width: 420px;
+      background: var(--card);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all .2s ease;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .history {
+      max-height: 220px;
+      overflow: auto;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      background: var(--bg-soft);
+      font-size: 0.9rem;
+    }
+
+    .loader { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.js"></script>
 </head>
-<body>
-    <h1>Matrix Calculator</h1>
-    <div class="functions slide-in-elliptic-top-fwd">
-        <button id="determinant" onclick="determinat()">Determinant</button>
-        <button id="inverse" onclick="inverse()">Inverse</button>
-        <button id="operations" onclick="operations()">Operations</button>
-        <button id="rank" onclick="rank()">Rank</button>
-        <button id="eigenvalues" onclick="eigenvalues()">Eigenvalues & Eigenvectors</button>
+<body class="light">
+  <header>
+    <div class="brand" aria-label="Brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M7 8h4M7 12h4M7 16h10" stroke="currentColor" stroke-linecap="round"/></svg>
+      <span>Web Kalkulator Matematika</span>
+      <span class="badge">Single-file</span>
     </div>
-    <div class="matrix_01 slide-in-elliptic-top-fwd">
-        <div class="matrix slide-in-elliptic-bottom-fwd" id="matrix_A">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-            <input type="number">
-        </div>
-        <div class="add_row">
-            <button id="add_row" onclick="addRow(matrix, matrix_Div, matrix_inputs)">+</button>
-            <button id="subtract_row" onclick="subRow(matrix, matrix_Div, matrix_inputs)">-</button>
-            <i class='bx bx-trash' onclick="clean(matrix)"></i>
-        </div>
-        <div class="add_collumn">
-            <button id="add_col" onclick="addCol(matrix, matrix_Div, matrix_inputs)">+</button>
-            <button id="subtract_col" onclick="subCol(matrix, matrix_Div, matrix_inputs)">-</button>
-        </div>
+    <div class="row" role="group" aria-label="Toolbar">
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle tema">
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-linecap="round"/></svg>
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z" stroke="currentColor"/></svg>
+        <span id="themeLabel">Terang</span>
+      </button>
+      <button id="btnUndoGlobal" class="btn" title="Undo operasi terakhir">Undo</button>
+      <button id="btnClearHistory" class="btn" title="Hapus history">Clear History</button>
     </div>
-    <div class="modal-background" onclick="toggleModal()"></div>
-    <div class="modal">
-        <h2 id="title"></h2>
-    </div>
-    <footer>
-        <p>© Copyright Marin Cervinschi || <i class='bx bxl-github' ><a href="https://github.com/MarinCervinschi/MatrixCalculator">GitHub Repo</a></i> - All rights reserved</p>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js" charset="utf-8"></script>
-    <script src="js/det.js" charset="UTF-8"></script>
-    <script src="js/rank.js" charset="UTF-8"></script>
-    <script src="js/operators.js" charset="UTF-8"></script>
-    <script src="js/algebra-0.2.6.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.1.0/math.js" integrity="sha512-bJoAPYQ2bOZCtRLkShanIf6IMJAs+8oAmdq5Qjra47q/2ggFXhQeDycgJciFdatpPmS833KvRE7wU/gLqdxz8Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="js/eigenvalues&eigenvectors.js" charset="UTF-8"></script>
-    <script src="js/inverse.js" charset="UTF-8"></script>
-    <script src="js/script.js" charset="UTF-8"></script>
+  </header>
 
+  <div class="layout">
+    <aside>
+      <div class="grid" role="navigation" aria-label="Navigasi kalkulator">
+        <button class="nav-item active" data-target="basic" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M7 8h10M7 12h6M7 16h10" stroke="currentColor" stroke-linecap="round"/></svg>
+          <span>Basic</span>
+          <span class="badge">Aritmatika</span>
+        </button>
+        <button class="nav-item" data-target="advanced" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M7 8h10M7 12h10M7 16h10" stroke="currentColor"/><circle cx="12" cy="12" r="3" stroke="currentColor"/></svg>
+          <span>Advanced</span>
+          <span class="badge">Kalkulus</span>
+        </button>
+        <button class="nav-item" data-target="matrix" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M8 3v18M16 3v18M3 8h18M3 16h18" stroke="currentColor"/></svg>
+          <span>Matrix</span>
+          <span class="badge">Linear</span>
+        </button>
+        <button class="nav-item" data-target="converter" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M8 8h8M8 16h8M8 12h8" stroke="currentColor" stroke-linecap="round"/></svg>
+          <span>Converter</span>
+          <span class="badge">Satuan</span>
+        </button>
+        <button class="nav-item" data-target="about" tabindex="0">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor"/><path d="M12 8.5v7M12 6v.01" stroke="currentColor" stroke-linecap="round"/></svg>
+          <span>About</span>
+          <span class="badge">Info</span>
+        </button>
+      </div>
+
+      <div class="panel" style="margin-top:12px">
+        <h3>Riwayat Operasi</h3>
+        <div id="historyList" class="history" aria-live="polite"></div>
+      </div>
+    </aside>
+
+    <main>
+      <!-- BASIC CALC -->
+      <section id="view-basic" class="panel">
+        <h2>Kalkulator Dasar</h2>
+        <div class="grid two">
+          <div>
+            <label for="basicExpr">Ekspresi (gunakan fungsi math.js: sin, cos, tan, asin, acos, atan, log10, ln=log, sqrt, abs, floor, ceil, mod, pow)</label>
+            <input id="basicExpr" type="text" class="kbd" placeholder="Contoh: sin(pi/2) + 3^2 - sqrt(16)" aria-label="Input ekspresi" />
+          </div>
+          <div class="grid four">
+            <button class="btn" data-insert="sin()">sin</button>
+            <button class="btn" data-insert="cos()">cos</button>
+            <button class="btn" data-insert="tan()">tan</button>
+            <button class="btn" data-insert="asin()">asin</button>
+            <button class="btn" data-insert="acos()">acos</button>
+            <button class="btn" data-insert="atan()">atan</button>
+            <button class="btn" data-insert="log10()">log</button>
+            <button class="btn" data-insert="log()">ln</button>
+            <button class="btn" data-insert="sqrt()">√</button>
+            <button class="btn" data-insert="abs()">abs</button>
+            <button class="btn" data-insert="floor()">floor</button>
+            <button class="btn" data-insert="ceil()">ceil</button>
+            <button class="btn" data-insert="pow(,)">x^y</button>
+            <button class="btn" data-insert="mod(,)">mod</button>
+            <button id="btnPercent" class="btn">%</button>
+            <button id="btnFactorial" class="btn">n!</button>
+          </div>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button id="btnCalcBasic" class="btn primary">Hitung</button>
+          <button id="btnClearBasic" class="btn">Clear</button>
+        </div>
+        <div style="margin-top:10px">
+          <label>Hasil</label>
+          <div id="basicResult" class="result-box" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ADVANCED CALC -->
+      <section id="view-advanced" class="panel" style="display:none">
+        <h2>Kalkulator Lanjut</h2>
+        <div class="panel">
+          <h3>Eksponensial / Kombinasi / Permutasi</h3>
+          <div class="grid three">
+            <div>
+              <label for="advExpX">e^x, x</label>
+              <input id="advExpX" type="number" step="any" />
+              <button id="btnExp" class="btn" style="margin-top:6px">Hitung e^x</button>
+            </div>
+            <div>
+              <label for="advCombN">Kombinasi C(n,k)</label>
+              <div class="row">
+                <input id="advCombN" type="number" step="1" placeholder="n" />
+                <input id="advCombK" type="number" step="1" placeholder="k" />
+                <button id="btnComb" class="btn">C(n,k)</button>
+              </div>
+            </div>
+            <div>
+              <label for="advPermN">Permutasi P(n,k)</label>
+              <div class="row">
+                <input id="advPermN" type="number" step="1" placeholder="n" />
+                <input id="advPermK" type="number" step="1" placeholder="k" />
+                <button id="btnPerm" class="btn">P(n,k)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Solusi Persamaan Linear Sederhana (ax + b = c)</h3>
+          <div class="row">
+            <input id="linA" type="number" step="any" placeholder="a" aria-label="koefisien a" />
+            <span>x +</span>
+            <input id="linB" type="number" step="any" placeholder="b" aria-label="konstanta b" />
+            <span>=</span>
+            <input id="linC" type="number" step="any" placeholder="c" aria-label="konstanta c" />
+            <button id="btnSolveLin" class="btn primary">Solve x</button>
+          </div>
+          <div id="linResult" class="result-box" style="margin-top:8px"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Integrasi Numerik (Trapezoid)</h3>
+          <div class="grid two">
+            <div>
+              <label for="intFunc">f(x)</label>
+              <input id="intFunc" type="text" class="kbd" placeholder="mis: sin(x) + x^2" />
+            </div>
+            <div class="row">
+              <div>
+                <label for="intA">a</label>
+                <input id="intA" type="number" step="any" />
+              </div>
+              <div>
+                <label for="intB">b</label>
+                <input id="intB" type="number" step="any" />
+              </div>
+              <div>
+                <label for="intN">n (>=1)</label>
+                <input id="intN" type="number" step="1" value="100" />
+              </div>
+              <button id="btnIntegrate" class="btn">Integrate</button>
+            </div>
+          </div>
+          <div id="intResult" class="result-box" style="margin-top:8px"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Derivatif Numerik (beda hingga pusat)</h3>
+          <div class="row">
+            <input id="diffFunc" type="text" class="kbd" placeholder="f(x), mis: x^3 + 2x" />
+            <span>pada x0</span>
+            <input id="diffX0" type="number" step="any" />
+            <span>h</span>
+            <input id="diffH" type="number" step="any" value="1e-5" />
+            <button id="btnDifferentiate" class="btn">f'(x0)</button>
+          </div>
+          <div id="diffResult" class="result-box" style="margin-top:8px"></div>
+        </div>
+      </section>
+
+      <!-- MATRIX -->
+      <section id="view-matrix" class="panel" style="display:none">
+        <h2>Kalkulator Matriks</h2>
+        <div class="panel">
+          <div class="row">
+            <h3 style="margin-right:auto">Matrix A</h3>
+            <button id="btnPasteA" class="btn" title="Paste CSV ke A">Paste CSV</button>
+            <button id="btnClearA" class="btn">Clear A</button>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <label for="rowsA">Baris</label>
+            <input id="rowsA" type="number" min="1" max="10" value="2" style="width:90px" />
+            <label for="colsA">Kolom</label>
+            <input id="colsA" type="number" min="1" max="10" value="2" style="width:90px" />
+            <button id="btnResizeA" class="btn">Terapkan</button>
+          </div>
+          <div id="tableA"></div>
+        </div>
+        <div class="panel">
+          <div class="row">
+            <h3 style="margin-right:auto">Matrix B</h3>
+            <button id="btnPasteB" class="btn" title="Paste CSV ke B">Paste CSV</button>
+            <button id="btnClearB" class="btn">Clear B</button>
+          </div>
+          <div class="row" style="margin-bottom:8px">
+            <label for="rowsB">Baris</label>
+            <input id="rowsB" type="number" min="1" max="10" value="2" style="width:90px" />
+            <label for="colsB">Kolom</label>
+            <input id="colsB" type="number" min="1" max="10" value="2" style="width:90px" />
+            <button id="btnResizeB" class="btn">Terapkan</button>
+          </div>
+          <div id="tableB"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row" style="justify-content: space-between; align-items: flex-end;">
+            <div>
+              <h3>Operasi Matriks Umum</h3>
+              <div class="row" style="margin-bottom:8px">
+                <button id="btnAddAB" class="btn">A + B</button>
+                <button id="btnSubAB" class="btn">A - B</button>
+                <button id="btnMulAB" class="btn">A × B</button>
+              </div>
+              <div class="row" style="margin-bottom:8px">
+                <input id="scalarVal" type="number" step="any" placeholder="skalar" style="width:120px" />
+                <select id="scalarTarget" style="width:140px">
+                  <option value="A">Skalar × A</option>
+                  <option value="B">Skalar × B</option>
+                </select>
+                <button id="btnScalarMul" class="btn">Kali Skalar</button>
+              </div>
+              <div class="row" style="margin-bottom:8px">
+                <button id="btnTransposeA" class="btn">Transpose A</button>
+                <button id="btnTransposeB" class="btn">Transpose B</button>
+              </div>
+              <div class="row" style="margin-bottom:8px">
+                <button id="btnDetA" class="btn">det(A)</button>
+                <button id="btnInvA" class="btn">inv(A)</button>
+                <button id="btnRankA" class="btn">rank(A)</button>
+                <button id="btnTraceA" class="btn">trace(A)</button>
+              </div>
+            </div>
+            <div class="grid" style="min-width:260px">
+              <button id="btnExample2x2" class="btn accent">Contoh Matriks 2×2</button>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <label>Hasil Operasi Matriks</label>
+            <div id="matrixResult" class="result-box"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Solusi Sistem Linear (Ax = b) — Gauss-Jordan + Konsistensi</h3>
+          <div class="row" style="margin-bottom:8px">
+            <label for="rowsSys">n (jumlah variabel)</label>
+            <input id="rowsSys" type="number" min="1" max="8" value="2" style="width:90px" />
+            <button id="btnResizeSys" class="btn">Terapkan</button>
+          </div>
+          <div id="tableSys"></div>
+          <div class="row" style="margin-top:8px">
+            <button id="btnSolveSys" class="btn primary">Solve Sistem</button>
+          </div>
+          <div id="sysResult" class="result-box" style="margin-top:8px"></div>
+        </div>
+      </section>
+
+      <!-- CONVERTER -->
+      <section id="view-converter" class="panel" style="display:none">
+        <h2>Kalkulator Konversi Satuan</h2>
+        <div class="panel">
+          <h3>Konversi Umum</h3>
+          <div class="grid two">
+            <div>
+              <label for="convCategory">Kategori</label>
+              <select id="convCategory">
+                <option value="length">Panjang</option>
+                <option value="mass">Massa</option>
+                <option value="volume">Volume</option>
+                <option value="area">Area</option>
+                <option value="temperature">Suhu</option>
+                <option value="time">Waktu</option>
+                <option value="speed">Kecepatan</option>
+                <option value="currency">Mata Uang</option>
+              </select>
+            </div>
+            <div></div>
+          </div>
+          <div id="convGeneral" class="grid two" style="margin-top:8px">
+            <div>
+              <label for="convFromValue">Nilai</label>
+              <input id="convFromValue" type="number" step="any" />
+            </div>
+            <div></div>
+            <div>
+              <label for="convFromUnit">Dari</label>
+              <select id="convFromUnit"></select>
+            </div>
+            <div>
+              <label for="convToUnit">Ke</label>
+              <select id="convToUnit"></select>
+            </div>
+            <div class="row">
+              <button id="btnConvert" class="btn primary">Konversi</button>
+              <div id="convLoading" class="row" style="display:none"><div class="loader"></div><span>Sedang memuat kurs...</span></div>
+            </div>
+            <div>
+              <label>Hasil</label>
+              <div id="convResult" class="result-box"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="currencyPanel" class="panel" style="display:none">
+          <h3>Mata Uang: Mode Offline/Online</h3>
+          <div class="grid two">
+            <div>
+              <label class="row" style="gap:8px">
+                <input id="useOnlineRates" type="checkbox" /> Gunakan kurs online (exchangerate.host)
+              </label>
+              <small class="muted">Jika fetch gagal, akan fallback ke kurs manual di bawah.</small>
+              <div style="margin-top:8px">
+                <label for="apiKey">API key (opsional, untuk exchangerate-api.com)</label>
+                <input id="apiKey" type="text" placeholder="Masukkan API key jika ada" />
+              </div>
+            </div>
+            <div>
+              <label>Atur Kurs Manual (basis USD)</label>
+              <div class="grid two">
+                <div>
+                  <label for="rateUSD">USD</label>
+                  <input id="rateUSD" type="number" step="any" value="1" />
+                </div>
+                <div>
+                  <label for="rateIDR">IDR (1 USD = ? IDR)</label>
+                  <input id="rateIDR" type="number" step="any" value="15000" />
+                </div>
+                <div>
+                  <label for="rateEUR">EUR</label>
+                  <input id="rateEUR" type="number" step="any" value="0.92" />
+                </div>
+                <div>
+                  <label for="rateGBP">GBP</label>
+                  <input id="rateGBP" type="number" step="any" value="0.78" />
+                </div>
+                <div>
+                  <label for="rateJPY">JPY</label>
+                  <input id="rateJPY" type="number" step="any" value="160" />
+                </div>
+              </div>
+              <div class="row" style="margin-top:8px">
+                <button id="btnSaveManualRates" class="btn">Simpan Kurs Manual</button>
+                <button id="btnLoadOnlineRates" class="btn">Fetch Kurs Sekarang</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="view-about" class="panel" style="display:none">
+        <h2>About Us</h2>
+        <p id="aboutText">"Pembuat web: Zaky Kurniawan — kelas XID absen 33, SMAN 1 Klaten. Saya dari jurusan IPA. Alasan membuat web ini: untuk jurnal matematika saya sebagai ulangan bab matriks."</p>
+        <button id="btnCopyAbout" class="btn">Copy About</button>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ---------- Utils & Toast ----------
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function showToast(message, type = 'info') {
+      const toast = $('#toast');
+      toast.textContent = message;
+      toast.style.borderColor = type === 'error' ? 'var(--danger)' : (type === 'warn' ? 'var(--warn)' : 'var(--border)');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function formatNumber(value, precision = 6) {
+      try {
+        if (typeof value === 'number') {
+          return math.format(value, { notation: 'fixed', precision });
+        }
+        return String(value);
+      } catch (_) { return String(value); }
+    }
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    // ---------- History ----------
+    const HISTORY_KEY = 'calc_history_v1';
+    function loadHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; }
+    }
+    function saveHistory(items) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(-50)));
+      renderHistory();
+    }
+    function addHistory(entry) {
+      const items = loadHistory();
+      items.push({ time: new Date().toISOString(), ...entry });
+      saveHistory(items);
+    }
+    function undoHistory() {
+      const items = loadHistory();
+      if (items.length === 0) return false;
+      items.pop();
+      saveHistory(items);
+      return true;
+    }
+    function renderHistory() {
+      const box = $('#historyList');
+      const items = loadHistory().slice().reverse();
+      if (items.length === 0) { box.textContent = 'Belum ada riwayat.'; return; }
+      box.innerHTML = items.map(it => {
+        return `<div style="margin-bottom:8px"><div style="color:var(--muted);font-size:.85rem">${new Date(it.time).toLocaleString()}</div><div><strong>${it.category}</strong>: ${it.description}</div><div style="color:var(--muted)">${it.output?.toString().slice(0,200) || ''}</div></div>`;
+      }).join('');
+    }
+
+    // ---------- Theme ----------
+    const THEME_KEY = 'calc_theme_v1';
+    function setTheme(mode) {
+      const isLight = mode === 'light';
+      document.body.classList.toggle('light', isLight);
+      $('#themeLabel').textContent = isLight ? 'Terang' : 'Gelap';
+      $('#themeToggle').setAttribute('aria-pressed', (!isLight).toString());
+      $('#iconSun').style.display = isLight ? 'block' : 'none';
+      $('#iconMoon').style.display = isLight ? 'none' : 'block';
+    }
+    function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY) || 'light';
+      setTheme(saved);
+    }
+
+    // ---------- Navigation ----------
+    function switchView(name) {
+      $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.target === name));
+      $$('#view-basic, #view-advanced, #view-matrix, #view-converter, #view-about').forEach(sec => sec.style.display = 'none');
+      $(`#view-${name}`).style.display = '';
+    }
+
+    // ---------- Basic Calculator ----------
+    const basic = (() => {
+      const exprInput = $('#basicExpr');
+      const resultBox = $('#basicResult');
+
+      function computePercent() {
+        // Interpret selected text or last number as percent (divide by 100)
+        const val = exprInput.value.trim();
+        if (!val) return;
+        exprInput.value = `(${val})/100`;
+      }
+
+      function appendToken(token) {
+        const el = exprInput;
+        const start = el.selectionStart ?? el.value.length;
+        const end = el.selectionEnd ?? el.value.length;
+        const before = el.value.slice(0, start);
+        const after = el.value.slice(end);
+        const insert = token;
+        el.value = before + insert + after;
+        const parenIndex = insert.indexOf('(');
+        const caret = parenIndex >= 0 ? start + parenIndex + 1 : start + insert.length;
+        el.focus();
+        el.setSelectionRange(caret, caret);
+      }
+
+      function factorialSafe(n) { // support integer n >= 0
+        if (!Number.isFinite(n)) throw new Error('n tidak valid');
+        if (n < 0) throw new Error('Faktorial untuk n>=0');
+        if (Math.floor(n) !== n) throw new Error('Faktorial untuk bilangan bulat');
+        return math.factorial(n);
+      }
+
+      function compute() {
+        try {
+          const text = exprInput.value.trim();
+          if (!text) { resultBox.textContent = ''; return; }
+          // replace caret power ^ with pow for math.js safety? math.js supports ^ operator. Keep as is.
+          const res = math.evaluate(text);
+          resultBox.textContent = Array.isArray(res) || math.typeOf(res) === 'Matrix' ?
+            math.format(res, { precision: 14 }) : String(res);
+          addHistory({ category: 'Basic', description: text, output: resultBox.textContent });
+        } catch (err) {
+          console.error(err);
+          showToast('Error: ' + err.message, 'error');
+        }
+      }
+
+      function clear() { exprInput.value = ''; resultBox.textContent = ''; }
+
+      function bind() {
+        $$('#view-basic [data-insert]').forEach(btn => btn.addEventListener('click', () => appendToken(btn.dataset.insert)));
+        $('#btnPercent').addEventListener('click', computePercent);
+        $('#btnFactorial').addEventListener('click', () => {
+          try {
+            const val = exprInput.value.trim();
+            if (!val) return;
+            const num = Number(val);
+            const res = factorialSafe(num);
+            resultBox.textContent = String(res);
+            addHistory({ category: 'Basic', description: `${val}!`, output: String(res) });
+          } catch (e) { showToast('Error faktorial: ' + e.message, 'error'); }
+        });
+        $('#btnCalcBasic').addEventListener('click', compute);
+        $('#btnClearBasic').addEventListener('click', clear);
+        exprInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') compute(); });
+      }
+
+      return { bind };
+    })();
+
+    // ---------- Advanced Calculator ----------
+    const advanced = (() => {
+      function exp() {
+        try {
+          const x = Number($('#advExpX').value);
+          const res = Math.exp(x);
+          $('#linResult').textContent = '';
+          addHistory({ category: 'Advanced', description: `e^${x}`, output: res });
+          showToast(`e^${x} = ${res}`);
+        } catch (e) { showToast('Error exp: ' + e.message, 'error'); }
+      }
+      function comb() {
+        try {
+          const n = Number($('#advCombN').value);
+          const k = Number($('#advCombK').value);
+          const res = math.combinations(n, k);
+          addHistory({ category: 'Advanced', description: `C(${n},${k})`, output: res });
+          showToast(`C(${n},${k}) = ${res}`);
+        } catch (e) { showToast('Error kombinasi: ' + e.message, 'error'); }
+      }
+      function perm() {
+        try {
+          const n = Number($('#advPermN').value);
+          const k = Number($('#advPermK').value);
+          const res = math.permutations(n, k);
+          addHistory({ category: 'Advanced', description: `P(${n},${k})`, output: res });
+          showToast(`P(${n},${k}) = ${res}`);
+        } catch (e) { showToast('Error permutasi: ' + e.message, 'error'); }
+      }
+      function solveLin() {
+        const a = Number($('#linA').value); const b = Number($('#linB').value); const c = Number($('#linC').value);
+        const out = $('#linResult');
+        try {
+          if (!Number.isFinite(a)) throw new Error('a tidak valid');
+          if (a === 0) {
+            if (b === c) { out.textContent = 'Tak hingga solusi (identitas).'; }
+            else { out.textContent = 'Tidak ada solusi (inkonsisten).'; }
+            return;
+          }
+          const x = (c - b) / a;
+          out.textContent = `x = ${x}`;
+          addHistory({ category: 'Advanced', description: `${a}x + ${b} = ${c}`, output: out.textContent });
+        } catch (e) { out.textContent = 'Error: ' + e.message; showToast(out.textContent, 'error'); }
+      }
+      function integrate() {
+        const fstr = $('#intFunc').value.trim();
+        const a = Number($('#intA').value); const b = Number($('#intB').value); let n = Number($('#intN').value);
+        const out = $('#intResult');
+        try {
+          if (!fstr) throw new Error('f(x) kosong');
+          if (!Number.isFinite(a) || !Number.isFinite(b)) throw new Error('batas tidak valid');
+          n = Math.max(1, Math.floor(n));
+          const node = math.parse(fstr);
+          const f = (x) => node.evaluate({ x });
+          const h = (b - a) / n;
+          let sum = 0.5 * (f(a) + f(b));
+          for (let i = 1; i < n; i++) sum += f(a + i * h);
+          const res = sum * h;
+          out.textContent = `∫[${a},${b}] f(x) dx ≈ ${res}`;
+          addHistory({ category: 'Advanced', description: `Integrasi trapezoid ${fstr} di [${a},${b}] n=${n}`, output: res });
+        } catch (e) { out.textContent = 'Error: ' + e.message; showToast(out.textContent, 'error'); }
+      }
+      function differentiate() {
+        const fstr = $('#diffFunc').value.trim();
+        const x0 = Number($('#diffX0').value); let h = Number($('#diffH').value);
+        const out = $('#diffResult');
+        try {
+          if (!fstr) throw new Error('f(x) kosong');
+          if (!Number.isFinite(x0)) throw new Error('x0 tidak valid');
+          if (!Number.isFinite(h) || h <= 0) h = 1e-5;
+          const node = math.parse(fstr);
+          const f = (x) => node.evaluate({ x });
+          const res = (f(x0 + h) - f(x0 - h)) / (2 * h);
+          out.textContent = `f'(${x0}) ≈ ${res}`;
+          addHistory({ category: 'Advanced', description: `Derivatif ${fstr} di x0=${x0}`, output: res });
+        } catch (e) { out.textContent = 'Error: ' + e.message; showToast(out.textContent, 'error'); }
+      }
+
+      function bind() {
+        $('#btnExp').addEventListener('click', exp);
+        $('#btnComb').addEventListener('click', comb);
+        $('#btnPerm').addEventListener('click', perm);
+        $('#btnSolveLin').addEventListener('click', solveLin);
+        $('#btnIntegrate').addEventListener('click', integrate);
+        $('#btnDifferentiate').addEventListener('click', differentiate);
+      }
+      return { bind };
+    })();
+
+    // ---------- Matrix Calculator ----------
+    const matrixCalc = (() => {
+      let rowsA = 2, colsA = 2, rowsB = 2, colsB = 2, nSys = 2;
+
+      function createTable(containerId, rows, cols, name) {
+        const container = $(containerId);
+        const tbl = document.createElement('table');
+        tbl.className = 'matrix';
+        const tbody = document.createElement('tbody');
+        for (let i = 0; i < rows; i++) {
+          const tr = document.createElement('tr');
+          for (let j = 0; j < cols; j++) {
+            const td = document.createElement('td');
+            const inp = document.createElement('input');
+            inp.type = 'number'; inp.step = 'any'; inp.inputMode = 'decimal';
+            inp.setAttribute('aria-label', `Matriks ${name} [${i+1},${j+1}]`);
+            td.appendChild(inp);
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+        tbl.appendChild(tbody);
+        container.innerHTML = '';
+        container.appendChild(tbl);
+      }
+
+      function getMatrix(containerId) {
+        const inputs = Array.from(document.querySelectorAll(`${containerId} table.matrix tbody tr`)).map(tr => Array.from(tr.querySelectorAll('input')));
+        const rows = inputs.length;
+        const cols = rows ? inputs[0].length : 0;
+        const data = [];
+        for (let i = 0; i < rows; i++) {
+          const row = [];
+          for (let j = 0; j < cols; j++) {
+            const v = parseFloat(inputs[i][j].value || '0');
+            row.push(Number.isFinite(v) ? v : 0);
+          }
+          data.push(row);
+        }
+        return math.matrix(data);
+      }
+
+      function setMatrix(containerId, mat) {
+        const data = mat.valueOf();
+        const rows = data.length; const cols = rows ? data[0].length : 0;
+        createTable(containerId, rows, cols, containerId === '#tableA' ? 'A' : 'B');
+        const inputs = Array.from(document.querySelectorAll(`${containerId} table.matrix tbody tr`)).map(tr => Array.from(tr.querySelectorAll('input')));
+        for (let i = 0; i < rows; i++) {
+          for (let j = 0; j < cols; j++) {
+            inputs[i][j].value = data[i][j];
+          }
+        }
+      }
+
+      function pasteCSVTo(containerId, text) {
+        // Supports: "1,2;3,4" or lines "1,2\n3,4"
+        const cleaned = text.trim();
+        let rows;
+        if (cleaned.includes('\n')) {
+          rows = cleaned.split(/\n+/).map(r => r.trim());
+        } else {
+          rows = cleaned.split(/\s*;\s*/).map(r => r.trim());
+        }
+        const data = rows.filter(r => r.length).map(r => r.split(/\s*,\s*/).map(Number));
+        if (data.length === 0) throw new Error('CSV kosong');
+        const cols = data[0].length;
+        if (!data.every(r => r.length === cols)) throw new Error('Jumlah kolom tidak konsisten');
+        setMatrix(containerId, math.matrix(data));
+      }
+
+      function formatMatrix(mat, precision = 6) {
+        const data = math.isMatrix(mat) ? mat.valueOf() : mat;
+        const rows = data.length;
+        const cols = rows ? data[0].length : 0;
+        const lines = data.map(r => r.map(v => formatNumber(v, precision)).join('\t')).join('\n');
+        const html = `<table class="matrix">${data.map(r => `<tr>${r.map(v => `<td class=\"kbd\">${formatNumber(v, precision)}</td>`).join('')}</tr>`).join('')}</table>`;
+        return { text: lines, html };
+      }
+
+      function setResult(content) { $('#matrixResult').innerHTML = content; }
+
+      function addMatrices() {
+        try {
+          const A = getMatrix('#tableA');
+          const B = getMatrix('#tableB');
+          if (A.size().toString() !== B.size().toString()) throw new Error('Ukuran A dan B harus sama untuk penjumlahan');
+          const C = math.add(A, B);
+          const out = formatMatrix(C);
+          setResult(out.html);
+          addHistory({ category: 'Matrix', description: 'A + B', output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function subMatrices() {
+        try {
+          const A = getMatrix('#tableA');
+          const B = getMatrix('#tableB');
+          if (A.size().toString() !== B.size().toString()) throw new Error('Ukuran A dan B harus sama untuk pengurangan');
+          const C = math.subtract(A, B);
+          const out = formatMatrix(C);
+          setResult(out.html);
+          addHistory({ category: 'Matrix', description: 'A - B', output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function mulMatrices() {
+        try {
+          const A = getMatrix('#tableA');
+          const B = getMatrix('#tableB');
+          if (A.size()[1] !== B.size()[0]) throw new Error('Kolom A harus sama dengan baris B untuk perkalian');
+          const C = math.multiply(A, B);
+          const out = formatMatrix(C);
+          setResult(out.html);
+          addHistory({ category: 'Matrix', description: 'A × B', output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function scalarMul() {
+        try {
+          const s = parseFloat($('#scalarVal').value);
+          if (!Number.isFinite(s)) throw new Error('Skalar tidak valid');
+          const target = $('#scalarTarget').value;
+          const M = getMatrix(target === 'A' ? '#tableA' : '#tableB');
+          const C = math.multiply(s, M);
+          const out = formatMatrix(C);
+          setResult(out.html);
+          addHistory({ category: 'Matrix', description: `${s} × ${target}`, output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function transpose(which) {
+        try {
+          const M = getMatrix(which === 'A' ? '#tableA' : '#tableB');
+          const T = math.transpose(M);
+          const out = formatMatrix(T);
+          setResult(out.html);
+          addHistory({ category: 'Matrix', description: `transpose(${which})`, output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function detA() {
+        try {
+          const A = getMatrix('#tableA');
+          const s = A.size();
+          if (s[0] !== s[1]) throw new Error('determinant hanya untuk matriks persegi');
+          const d = math.det(A);
+          setResult(`<div class="kbd">det(A) = ${d}</div>`);
+          addHistory({ category: 'Matrix', description: 'det(A)', output: d });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function invA() {
+        try {
+          const A = getMatrix('#tableA');
+          const s = A.size();
+          if (s[0] !== s[1]) throw new Error('inverse hanya untuk matriks persegi');
+          const d = math.det(A);
+          if (Math.abs(d) < 1e-12) throw new Error('Matriks singular, tidak memiliki inverse');
+          const inv = math.inv(A);
+          const out = formatMatrix(inv, 6);
+          setResult(out.html + '<div class="kbd" style="margin-top:6px">(ditampilkan hingga 6 desimal)</div>');
+          addHistory({ category: 'Matrix', description: 'inv(A)', output: out.text });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function rankA() {
+        try {
+          const A = getMatrix('#tableA');
+          const r = math.rank(A);
+          setResult(`<div class="kbd">rank(A) = ${r}</div>`);
+          addHistory({ category: 'Matrix', description: 'rank(A)', output: r });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+      function traceA() {
+        try {
+          const A = getMatrix('#tableA');
+          const s = A.size();
+          if (s[0] !== s[1]) throw new Error('trace hanya untuk matriks persegi');
+          let tr = 0; const a = A.valueOf(); for (let i = 0; i < s[0]; i++) tr += a[i][i];
+          setResult(`<div class="kbd">trace(A) = ${tr}</div>`);
+          addHistory({ category: 'Matrix', description: 'trace(A)', output: tr });
+        } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      }
+
+      // Sistem linear Ax=b via RREF untuk klasifikasi solusi
+      function rref(aug, tol = 1e-10) {
+        // aug: matrix m x (n+1)
+        const a = aug.map(row => row.slice());
+        const m = a.length; const n = a[0].length - 1;
+        let r = 0;
+        for (let c = 0; c < n && r < m; c++) {
+          // pivot
+          let piv = r;
+          for (let i = r + 1; i < m; i++) if (Math.abs(a[i][c]) > Math.abs(a[piv][c])) piv = i;
+          if (Math.abs(a[piv][c]) < tol) continue;
+          if (piv !== r) [a[piv], a[r]] = [a[r], a[piv]];
+          // normalize
+          const div = a[r][c];
+          for (let j = c; j <= n; j++) a[r][j] /= div;
+          // eliminate others
+          for (let i = 0; i < m; i++) if (i !== r) {
+            const f = a[i][c]; if (Math.abs(f) < tol) continue;
+            for (let j = c; j <= n; j++) a[i][j] -= f * a[r][j];
+          }
+          r++;
+        }
+        return a;
+      }
+
+      function solveSystem() {
+        try {
+          const n = nSys;
+          // Build A and b from tableSys
+          const rows = Array.from(document.querySelectorAll('#tableSys table.matrix tbody tr'));
+          const A = []; const b = [];
+          rows.forEach(tr => {
+            const cells = Array.from(tr.querySelectorAll('input'));
+            const coeff = cells.slice(0, n).map(c => parseFloat(c.value || '0'));
+            const rhs = parseFloat(cells[n].value || '0');
+            A.push(coeff);
+            b.push(rhs);
+          });
+          const aug = A.map((row, i) => row.concat([b[i]]));
+          // Check ranks using math.js
+          const rankA = math.rank(math.matrix(A));
+          const rankAug = math.rank(math.matrix(aug));
+          if (rankA !== rankAug) {
+            $('#sysResult').textContent = 'Sistem tidak konsisten (tidak ada solusi).';
+            addHistory({ category: 'Matrix', description: 'Solve sistem: inconsistent', output: 'No solution' });
+            return;
+          }
+          if (rankA < n) {
+            $('#sysResult').textContent = 'Tak hingga solusi (infinitely many solutions).';
+            addHistory({ category: 'Matrix', description: 'Solve sistem: infinite solutions', output: 'Infinite' });
+            return;
+          }
+          // Unique solution, compute via RREF
+          const R = rref(aug);
+          const sol = new Array(n).fill(0);
+          for (let i = 0; i < n; i++) {
+            // find leading 1 position
+            const row = R[i];
+            const pivotCol = row.findIndex((v, idx) => idx < n && Math.abs(v - 1) < 1e-9);
+            if (pivotCol >= 0) sol[pivotCol] = row[n];
+          }
+          const text = sol.map((v, i) => `x${i+1} = ${formatNumber(v, 10)}`).join('\n');
+          $('#sysResult').textContent = text;
+          addHistory({ category: 'Matrix', description: 'Solve sistem: unique', output: text });
+        } catch (e) { $('#sysResult').textContent = 'Error: ' + e.message; showToast('Error: ' + e.message, 'error'); }
+      }
+
+      function example2x2() {
+        try {
+          const A = math.matrix([[1,2],[3,4]]);
+          const B = math.matrix([[5,6],[7,8]]);
+          setMatrix('#tableA', A); setMatrix('#tableB', B);
+          const det = math.det(A);
+          const inv = math.inv(A);
+          const add = math.add(A, B);
+          const mul = math.multiply(A, B);
+          const outDet = `det(A) = ${det}`;
+          const outInv = formatMatrix(inv, 6).html + '<div class="kbd" style="margin-top:6px">(hingga 6 desimal)</div>';
+          const outAdd = formatMatrix(add).html;
+          const outMul = formatMatrix(mul).html;
+          $('#matrixResult').innerHTML = `<div class="kbd" style="margin-bottom:8px">${outDet}</div><div style="margin-bottom:8px"><strong>A + B</strong>${outAdd}</div><div style="margin-bottom:8px"><strong>A × B</strong>${outMul}</div><div><strong>inv(A)</strong>${outInv}</div>`;
+          addHistory({ category: 'Matrix', description: 'Contoh 2x2', output: 'det(A), inv(A), A+B, A×B' });
+        } catch (e) { showToast('Error contoh: ' + e.message, 'error'); }
+      }
+
+      function bind() {
+        // initial tables
+        createTable('#tableA', rowsA, colsA, 'A');
+        createTable('#tableB', rowsB, colsB, 'B');
+        createSystemTable();
+
+        $('#btnResizeA').addEventListener('click', () => {
+          rowsA = clamp(parseInt($('#rowsA').value), 1, 10);
+          colsA = clamp(parseInt($('#colsA').value), 1, 10);
+          createTable('#tableA', rowsA, colsA, 'A');
+        });
+        $('#btnResizeB').addEventListener('click', () => {
+          rowsB = clamp(parseInt($('#rowsB').value), 1, 10);
+          colsB = clamp(parseInt($('#colsB').value), 1, 10);
+          createTable('#tableB', rowsB, colsB, 'B');
+        });
+        $('#btnPasteA').addEventListener('click', async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            pasteCSVTo('#tableA', text);
+            showToast('Berhasil paste ke A');
+          } catch (e) { showToast('Gagal paste: ' + e.message, 'error'); }
+        });
+        $('#btnPasteB').addEventListener('click', async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            pasteCSVTo('#tableB', text);
+            showToast('Berhasil paste ke B');
+          } catch (e) { showToast('Gagal paste: ' + e.message, 'error'); }
+        });
+        $('#btnClearA').addEventListener('click', () => createTable('#tableA', rowsA, colsA, 'A'));
+        $('#btnClearB').addEventListener('click', () => createTable('#tableB', rowsB, colsB, 'B'));
+
+        $('#btnAddAB').addEventListener('click', addMatrices);
+        $('#btnSubAB').addEventListener('click', subMatrices);
+        $('#btnMulAB').addEventListener('click', mulMatrices);
+        $('#btnScalarMul').addEventListener('click', scalarMul);
+        $('#btnTransposeA').addEventListener('click', () => transpose('A'));
+        $('#btnTransposeB').addEventListener('click', () => transpose('B'));
+        $('#btnDetA').addEventListener('click', detA);
+        $('#btnInvA').addEventListener('click', invA);
+        $('#btnRankA').addEventListener('click', rankA);
+        $('#btnTraceA').addEventListener('click', traceA);
+        $('#btnExample2x2').addEventListener('click', example2x2);
+
+        $('#btnResizeSys').addEventListener('click', () => {
+          nSys = clamp(parseInt($('#rowsSys').value), 1, 8);
+          createSystemTable();
+        });
+        $('#btnSolveSys').addEventListener('click', solveSystem);
+      }
+
+      function createSystemTable() {
+        const container = $('#tableSys');
+        const tbl = document.createElement('table'); tbl.className = 'matrix';
+        const tbody = document.createElement('tbody');
+        for (let i = 0; i < nSys; i++) {
+          const tr = document.createElement('tr');
+          for (let j = 0; j < nSys + 1; j++) {
+            const td = document.createElement('td');
+            const inp = document.createElement('input');
+            inp.type = 'number'; inp.step = 'any'; inp.inputMode = 'decimal';
+            if (nSys === 2) {
+              // Prefill example system 2x+3y=5; 4x - y = 1
+              if (i === 0 && j === 0) inp.value = 2;
+              if (i === 0 && j === 1) inp.value = 3;
+              if (i === 0 && j === 2) inp.value = 5;
+              if (i === 1 && j === 0) inp.value = 4;
+              if (i === 1 && j === 1) inp.value = -1;
+              if (i === 1 && j === 2) inp.value = 1;
+            }
+            td.appendChild(inp);
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+        tbl.appendChild(tbody);
+        container.innerHTML = '';
+        container.appendChild(tbl);
+      }
+
+      return { bind };
+    })();
+
+    // ---------- Converter ----------
+    const converter = (() => {
+      const generalUnits = {
+        length: { base: 'm', units: { m: 1, km: 1000, cm: 0.01, mm: 0.001, mi: 1609.344, yd: 0.9144, ft: 0.3048, in: 0.0254 } },
+        mass: { base: 'kg', units: { kg: 1, g: 0.001, mg: 1e-6, lb: 0.45359237, oz: 0.028349523125 } },
+        volume: { base: 'm3', units: { m3: 1, L: 0.001, mL: 1e-6, gal: 0.003785411784, qt: 0.000946352946, pt: 0.000473176473, cup: 0.0002365882365 } },
+        area: { base: 'm2', units: { m2: 1, km2: 1e6, cm2: 1e-4, mm2: 1e-6, ha: 1e4, ac: 4046.8564224 } },
+        time: { base: 's', units: { s: 1, ms: 0.001, min: 60, h: 3600, day: 86400 } },
+        speed: { base: 'm/s', units: { 'm/s': 1, 'km/h': 1000/3600, mph: 0.44704, knot: 0.514444 } },
+      };
+
+      const CURRENCY_KEY = 'manual_rates_v1';
+      let onlineRates = null;
+
+      function saveManualRates(rates) { localStorage.setItem(CURRENCY_KEY, JSON.stringify(rates)); }
+      function loadManualRates() {
+        try { return JSON.parse(localStorage.getItem(CURRENCY_KEY)) || { USD:1, IDR:15000, EUR:0.92, GBP:0.78, JPY:160 }; } catch { return { USD:1, IDR:15000, EUR:0.92, GBP:0.78, JPY:160 }; }
+      }
+
+      function populateUnits(category) {
+        const fromSel = $('#convFromUnit'), toSel = $('#convToUnit');
+        fromSel.innerHTML = ''; toSel.innerHTML = '';
+        if (category === 'temperature') {
+          ['C','F','K'].forEach(u => {
+            const o1 = new Option(u, u); const o2 = new Option(u, u);
+            fromSel.add(o1); toSel.add(o2);
+          });
+        } else if (category === 'currency') {
+          const rates = loadManualRates();
+          Object.keys(rates).forEach(cur => { fromSel.add(new Option(cur, cur)); toSel.add(new Option(cur, cur)); });
+          $('#currencyPanel').style.display = '';
+        } else {
+          const { units } = generalUnits[category];
+          Object.keys(units).forEach(u => { fromSel.add(new Option(u, u)); toSel.add(new Option(u, u)); });
+          $('#currencyPanel').style.display = 'none';
+        }
+      }
+
+      function convertGeneral(category, value, from, to) {
+        if (category === 'temperature') {
+          const t = from + '->' + to;
+          const v = Number(value);
+          const err = () => { throw new Error('Satuan suhu tidak didukung'); };
+          switch (t) {
+            case 'C->F': return v * 9/5 + 32;
+            case 'F->C': return (v - 32) * 5/9;
+            case 'C->K': return v + 273.15;
+            case 'K->C': return v - 273.15;
+            case 'F->K': return (v - 32) * 5/9 + 273.15;
+            case 'K->F': return (v - 273.15) * 9/5 + 32;
+            default: if (from === to) return v; else err();
+          }
+        } else if (category === 'currency') {
+          return convertCurrency(value, from, to);
+        } else {
+          const { units } = generalUnits[category];
+          const vf = Number(value);
+          const inBase = vf * units[from];
+          const out = inBase / units[to];
+          return out;
+        }
+      }
+
+      async function fetchRatesOnline() {
+        $('#convLoading').style.display = 'flex';
+        try {
+          const useHost = true; // default provider without API key
+          let data = null;
+          if (useHost) {
+            const res = await fetch('https://api.exchangerate.host/latest?base=USD');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            data = await res.json();
+            if (!data || !data.rates) throw new Error('Format tidak dikenali');
+            onlineRates = data.rates; // base USD
+          } else {
+            // kept for future expansion if needed with apiKey
+            onlineRates = null;
+          }
+          showToast('Kurs online terbarui');
+        } catch (e) {
+          console.warn(e);
+          showToast('Gagal memuat kurs online, gunakan kurs manual', 'warn');
+        } finally {
+          $('#convLoading').style.display = 'none';
+        }
+      }
+
+      function getRates() {
+        const useOnline = $('#useOnlineRates').checked;
+        if (useOnline && onlineRates) return onlineRates;
+        const m = loadManualRates();
+        return m;
+      }
+
+      function convertCurrency(value, from, to) {
+        const rates = getRates();
+        // Expect rates as per 1 USD -> X CUR
+        // If onlineRates base USD: rates[IDR] means 1 USD = X IDR
+        const v = Number(value);
+        if (!Number.isFinite(v)) throw new Error('Nilai tidak valid');
+        if (!rates[from] || !rates[to]) throw new Error('Mata uang tidak dikenali');
+        const inUSD = v / rates[from];
+        const out = inUSD * rates[to];
+        return out;
+      }
+
+      function convertAction() {
+        try {
+          const cat = $('#convCategory').value;
+          const val = Number($('#convFromValue').value);
+          const from = $('#convFromUnit').value; const to = $('#convToUnit').value;
+          if (!Number.isFinite(val)) throw new Error('Nilai tidak valid');
+          const res = convertGeneral(cat, val, from, to);
+          $('#convResult').textContent = `${val} ${from} = ${res} ${to}`;
+          addHistory({ category: 'Converter', description: `${cat} ${from} -> ${to}`, output: res });
+        } catch (e) { $('#convResult').textContent = 'Error: ' + e.message; showToast('Error: ' + e.message, 'error'); }
+      }
+
+      function saveManualFromInputs() {
+        const rates = {
+          USD: Number($('#rateUSD').value) || 1,
+          IDR: Number($('#rateIDR').value) || 15000,
+          EUR: Number($('#rateEUR').value) || 0.92,
+          GBP: Number($('#rateGBP').value) || 0.78,
+          JPY: Number($('#rateJPY').value) || 160,
+        };
+        saveManualRates(rates);
+        populateUnits('currency');
+        showToast('Kurs manual disimpan');
+      }
+
+      function bind() {
+        // init
+        populateUnits($('#convCategory').value);
+        $('#convCategory').addEventListener('change', (e) => populateUnits(e.target.value));
+        $('#btnConvert').addEventListener('click', convertAction);
+
+        // currency panel
+        const manual = loadManualRates();
+        $('#rateUSD').value = manual.USD ?? 1;
+        $('#rateIDR').value = manual.IDR ?? 15000;
+        $('#rateEUR').value = manual.EUR ?? 0.92;
+        $('#rateGBP').value = manual.GBP ?? 0.78;
+        $('#rateJPY').value = manual.JPY ?? 160;
+        $('#btnSaveManualRates').addEventListener('click', saveManualFromInputs);
+        $('#useOnlineRates').addEventListener('change', async (e) => { if (e.target.checked) await fetchRatesOnline(); });
+        $('#btnLoadOnlineRates').addEventListener('click', fetchRatesOnline);
+      }
+      return { bind };
+    })();
+
+    // ---------- About ----------
+    function bindAbout() {
+      $('#btnCopyAbout').addEventListener('click', async () => {
+        try {
+          const text = $('#aboutText').textContent;
+          await navigator.clipboard.writeText(text);
+          showToast('About disalin ke clipboard');
+        } catch (e) { showToast('Gagal menyalin', 'error'); }
+      });
+    }
+
+    // ---------- Global Bindings ----------
+    function bindGlobal() {
+      // Theme
+      initTheme();
+      $('#themeToggle').addEventListener('click', () => {
+        const newMode = document.body.classList.contains('light') ? 'dark' : 'light';
+        setTheme(newMode); localStorage.setItem(THEME_KEY, newMode);
+      });
+
+      // Nav
+      $$('.nav-item').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.target)));
+
+      // History Controls
+      $('#btnClearHistory').addEventListener('click', () => { saveHistory([]); showToast('History dibersihkan'); });
+      $('#btnUndoGlobal').addEventListener('click', () => { if (undoHistory()) showToast('Undo terakhir'); else showToast('Tidak ada history', 'warn'); });
+
+      renderHistory();
+    }
+
+    // ---------- Init ----------
+    window.addEventListener('DOMContentLoaded', () => {
+      bindGlobal();
+      basic.bind();
+      advanced.bind();
+      matrixCalc.bind();
+      converter.bind();
+      bindAbout();
+      // Default quick demo values for converter
+      $('#convFromValue').value = 100;
+      $('#convCategory').value = 'temperature';
+      $('#convCategory').dispatchEvent(new Event('change'));
+      $('#convFromUnit').value = 'C';
+      $('#convToUnit').value = 'F';
+    });
+  </script>
 </body>
-
 </html>
